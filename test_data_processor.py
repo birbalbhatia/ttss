@@ -106,6 +106,18 @@ class TestEdgeCases(unittest.TestCase):
         data = [1, 1, 1, 1]
         result = find_duplicates_fast(data)
         self.assertEqual(result, [1])
+    
+    def test_median_odd_length(self):
+        """Test median calculation for odd-length lists."""
+        numbers = [1, 2, 3, 4, 5]
+        stats = compute_statistics_optimized(numbers)
+        self.assertEqual(stats['median'], 3)
+    
+    def test_median_even_length(self):
+        """Test median calculation for even-length lists."""
+        numbers = [1, 2, 3, 4]
+        stats = compute_statistics_optimized(numbers)
+        self.assertEqual(stats['median'], 2.5)
 
 
 if __name__ == '__main__':

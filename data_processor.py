@@ -50,7 +50,12 @@ def compute_statistics(numbers):
     # Issue 4: Redundant calculations - sorting multiple times
     mean = sum(numbers) / len(numbers)
     sorted_nums = sorted(numbers)
-    median = sorted_nums[len(numbers) // 2]
+    n = len(numbers)
+    # Calculate median correctly for both odd and even length lists
+    if n % 2 == 0:
+        median = (sorted_nums[n // 2 - 1] + sorted_nums[n // 2]) / 2
+    else:
+        median = sorted_nums[n // 2]
     
     # Sorting again for no reason
     sorted_nums_2 = sorted(numbers)

@@ -4,7 +4,7 @@ This module demonstrates best practices for efficient code.
 """
 import json
 from functools import lru_cache
-from collections import Counter
+from collections import Counter, OrderedDict
 
 
 def process_data_efficiently(data_list):
@@ -33,9 +33,15 @@ def compute_statistics_optimized(numbers):
     sorted_nums = sorted(numbers)
     n = len(numbers)
     
+    # Calculate median correctly for both odd and even length lists
+    if n % 2 == 0:
+        median = (sorted_nums[n // 2 - 1] + sorted_nums[n // 2]) / 2
+    else:
+        median = sorted_nums[n // 2]
+    
     return {
         'mean': sum(numbers) / n,
-        'median': sorted_nums[n // 2],
+        'median': median,
         'min': sorted_nums[0],
         'max': sorted_nums[-1]
     }
@@ -59,39 +65,35 @@ def search_in_set(data_set, target):
 
 
 class DataCacheOptimized:
-    """Cache implementation with LRU eviction policy."""
+    """Cache implementation with LRU eviction policy using OrderedDict."""
     
     def __init__(self, max_size=1000):
-        # Improvement 7: Bounded cache with size limit
+        # Improvement 7: Bounded cache with size limit using OrderedDict for O(1) operations
         self.max_size = max_size
-        self.cache = {}
-        self.access_order = []
+        self.cache = OrderedDict()
     
     def get(self, key):
         """Get value from cache and update access order."""
         if key in self.cache:
-            # Move to end to mark as recently used
-            self.access_order.remove(key)
-            self.access_order.append(key)
+            # Move to end to mark as recently used (O(1) operation)
+            self.cache.move_to_end(key)
             return self.cache[key]
         return None
     
     def set(self, key, value):
         """Set value in cache with LRU eviction."""
         if key in self.cache:
-            self.access_order.remove(key)
+            # Update existing key and move to end (O(1) operation)
+            self.cache.move_to_end(key)
         elif len(self.cache) >= self.max_size:
-            # Evict least recently used item
-            oldest = self.access_order.pop(0)
-            del self.cache[oldest]
+            # Evict least recently used item (first item, O(1) operation)
+            self.cache.popitem(last=False)
         
         self.cache[key] = value
-        self.access_order.append(key)
     
     def clear(self):
         """Clear the cache."""
-        self.cache = {}
-        self.access_order = []
+        self.cache.clear()
 
 
 def generate_report_efficient(data_items):
