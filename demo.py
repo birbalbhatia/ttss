@@ -31,9 +31,16 @@ def time_function(func, *args):
 
 def print_comparison(test_name, slow_time, fast_time):
     """Print a formatted comparison."""
-    speedup = slow_time / fast_time if fast_time > 0 else float('inf')
+    if fast_time > 0:
+        speedup = slow_time / fast_time
+        ratio = int(speedup)
+    else:
+        speedup = float('inf')
+        ratio = bar_width
+    
     bar_width = 50
-    slow_bar = '█' * min(bar_width, int(slow_time / fast_time))
+    # Cap the ratio to prevent extremely long strings
+    slow_bar = '█' * min(bar_width, ratio)
     fast_bar = '█' * bar_width
     
     print(f"\n{test_name}")
